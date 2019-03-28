@@ -33,7 +33,5 @@
 
     <modules>
         <module>gogoproto-java</module>
-        <module>grpc</module>
-        <module>protobuf</module>
     </modules>
 </project>

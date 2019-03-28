@@ -25,12 +25,12 @@ import io.cellery.observability.telemetry.receiver.generated.AttributesOuterClas
 import io.cellery.observability.telemetry.receiver.generated.MixerGrpc;
 import io.cellery.observability.telemetry.receiver.generated.Report;
 import io.grpc.stub.StreamObserver;
+import org.apache.log4j.Logger;
 import org.wso2.siddhi.core.stream.input.source.SourceEventListener;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * Telemetry Service implementation which receives the information.
@@ -47,56 +47,60 @@ public class TelemetryServiceImpl extends MixerGrpc.MixerImplBase {
     @Override
     public void report(Report.ReportRequest request,
                        StreamObserver<Report.ReportResponse> responseObserver) {
-        AttributedDecoder attributedDecoder = new AttributedDecoder(request);
-        List<AttributesOuterClass.CompressedAttributes> attributesList = request.getAttributesList();
+        try {
+            AttributedDecoder attributedDecoder = new AttributedDecoder(request);
+            List<AttributesOuterClass.CompressedAttributes> attributesList = request.getAttributesList();
 
-        for (AttributesOuterClass.CompressedAttributes attributes : attributesList) {
-            attributedDecoder.setCurrentAttributes(attributes);
-            AttributesBag attributesBag = new AttributesBag();
+            for (AttributesOuterClass.CompressedAttributes attributes : attributesList) {
+                attributedDecoder.setCurrentAttributes(attributes);
+                AttributesBag attributesBag = new AttributesBag();
 
-            attributes.getStrings().forEach((key, value) -> {
-                attributesBag.put(attributedDecoder.getValue(key), attributedDecoder.getValue(value));
-            });
-
-            attributes.getStringMaps().forEach((key, stringMap) -> {
-                Map<String, String> decodedStringMap = new HashMap<>();
-                stringMap.getEntries().forEach((stringMapKey, stringMapValue) -> {
-                    decodedStringMap.put(attributedDecoder.getValue(stringMapKey),
-                            attributedDecoder.getValue(stringMapValue));
+                attributes.getStrings().forEach((key, value) -> {
+                    attributesBag.put(attributedDecoder.getValue(key), attributedDecoder.getValue(value));
                 });
-                attributesBag.put(attributedDecoder.getValue(key), decodedStringMap);
-            });
 
-            attributes.getBoolsMap().forEach((key, value) -> {
-                attributesBag.put(attributedDecoder.getValue(key), value);
-            });
+                attributes.getStringMaps().forEach((key, stringMap) -> {
+                    Map<String, String> decodedStringMap = new HashMap<>();
+                    stringMap.getEntries().forEach((stringMapKey, stringMapValue) -> {
+                        decodedStringMap.put(attributedDecoder.getValue(stringMapKey),
+                                attributedDecoder.getValue(stringMapValue));
+                    });
+                    attributesBag.put(attributedDecoder.getValue(key), decodedStringMap);
+                });
 
-            attributes.getInt64SMap().forEach((key, value) -> {
-                attributesBag.put(attributedDecoder.getValue(key), value);
-            });
+                attributes.getBoolsMap().forEach((key, value) -> {
+                    attributesBag.put(attributedDecoder.getValue(key), value);
+                });
 
-            attributes.getDoublesMap().forEach((key, value) -> {
-                attributesBag.put(attributedDecoder.getValue(key), value);
-            });
+                attributes.getInt64SMap().forEach((key, value) -> {
+                    attributesBag.put(attributedDecoder.getValue(key), value);
+                });
 
-            attributes.getBytesMap().forEach((key, value) -> {
-                attributesBag.put(attributedDecoder.getValue(key), value);
-            });
+                attributes.getDoublesMap().forEach((key, value) -> {
+                    attributesBag.put(attributedDecoder.getValue(key), value);
+                });
 
-            attributes.getTimestampsMap().forEach((key, value) -> {
-                attributesBag.put(attributedDecoder.getValue(key), value);
-            });
+                attributes.getBytesMap().forEach((key, value) -> {
+                    attributesBag.put(attributedDecoder.getValue(key), value);
+                });
 
-            attributes.getDurationsMap().forEach((key, value) -> {
-                attributesBag.put(attributedDecoder.getValue(key), value);
-            });
-            validateAttributes(attributesBag);
-            sourceEventListener.onEvent(attributesBag.getAttributes(), new String[0]);
+                attributes.getTimestampsMap().forEach((key, value) -> {
+                    attributesBag.put(attributedDecoder.getValue(key), value);
+                });
+
+                attributes.getDurationsMap().forEach((key, value) -> {
+                    attributesBag.put(attributedDecoder.getValue(key), value);
+                });
+                validateAttributes(attributesBag);
+                sourceEventListener.onEvent(attributesBag.getAttributes(), new String[0]);
+            }
+
+            Report.ReportResponse reply = Report.ReportResponse.newBuilder().build();
+            responseObserver.onNext(reply);
+            responseObserver.onCompleted();
+        } catch (Throwable throwable) {
+            log.error("Error occured when receiving the event", throwable);
         }
-
-        Report.ReportResponse reply = Report.ReportResponse.newBuilder().build();
-        responseObserver.onNext(reply);
-        responseObserver.onCompleted();
     }
 
     private void validateAttributes(AttributesBag attributesBag) {
