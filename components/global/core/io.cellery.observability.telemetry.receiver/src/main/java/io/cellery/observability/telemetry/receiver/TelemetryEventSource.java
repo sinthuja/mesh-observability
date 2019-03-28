@@ -34,7 +34,6 @@ import org.wso2.siddhi.core.stream.input.source.SourceEventListener;
 import org.wso2.siddhi.core.util.config.ConfigReader;
 import org.wso2.siddhi.core.util.transport.OptionHolder;
 
-import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -81,7 +80,7 @@ public class TelemetryEventSource extends Source {
                     .build()
                     .start();
             log.info("Telemetry GRPC Server started, listening on " + port);
-        } catch (IOException e) {
+        } catch (Throwable e) {
             throw new ConnectionUnavailableException("Unable to start the Telemetry gRPC service on port: " + port, e);
         }
     }

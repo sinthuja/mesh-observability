@@ -65,6 +65,7 @@
                     <pluginId>grpc-java</pluginId>
                     <pluginArtifact>io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}
                     </pluginArtifact>
+                    <protoSourceRoot>${basedir}/src/main/resources/gogoproto</protoSourceRoot>
                     <writeDescriptorSet>true</writeDescriptorSet>
                     <attachDescriptorSet>true</attachDescriptorSet>
                     <includeDependenciesInDescriptorSet>true</includeDependenciesInDescriptorSet>

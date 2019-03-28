@@ -16,7 +16,8 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
         <groupId>org.wso2</groupId>
@@ -43,11 +44,6 @@
                 <groupId>io.cellery.observability</groupId>
                 <artifactId>io.cellery.observability.model.generator</artifactId>
                 <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.cellery.observability</groupId>
-                <artifactId>grpc</artifactId>
-                <version>${grpc.orbit.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.cellery.observability</groupId>
@@ -151,6 +147,11 @@
                 <groupId>io.grpc</groupId>
                 <artifactId>grpc-protobuf-lite</artifactId>
                 <version>${grpc.protobuf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-context</artifactId>
+                <version>${grpc.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.opentracing</groupId>
@@ -282,8 +283,8 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>io.cellery.observability</groupId>
-                <artifactId>gogoproto-java</artifactId>
+                <groupId>org.wso2.orbit.com.google.protobuf</groupId>
+                <artifactId>protobuf-gogoproto</artifactId>
                 <version>${gogoproto.orbit.version}</version>
             </dependency>
             <dependency>
@@ -468,10 +469,11 @@
         <commons.io.version>2.6</commons.io.version>
         <protobuf.java.version>3.6.1</protobuf.java.version>
         <proto.google.common.proto>1.12.0</proto.google.common.proto>
-        <grpc.protobuf.version>1.15.0</grpc.protobuf.version>
-        <grpc.core>1.15.0</grpc.core>
-        <grpc.netty>1.15.0</grpc.netty>
-        <grpc.stub.version>1.15.0</grpc.stub.version>
+        <grpc.version>1.15.0</grpc.version>
+        <grpc.protobuf.version>${grpc.version}</grpc.protobuf.version>
+        <grpc.core>${grpc.version}</grpc.core>
+        <grpc.netty>${grpc.version}</grpc.netty>
+        <grpc.stub.version>${grpc.version}</grpc.stub.version>
         <open.tracing.version>0.31.0</open.tracing.version>
         <brave.open.tracing.version>0.29.0</brave.open.tracing.version>
         <zipkin.version>2.11.6</zipkin.version>
@@ -486,14 +488,11 @@
         <bouncy.castle.version>1.59</bouncy.castle.version>
         <opencensus.version>0.16.1</opencensus.version>
         <protobuf.orbit.version>0.1.1-SNAPSHOT</protobuf.orbit.version>
-        <gogoproto.orbit.version>0.1.1-SNAPSHOT</gogoproto.orbit.version>
-        <grpc.orbit.version>0.1.1-SNAPSHOT</grpc.orbit.version>
-
+        <gogoproto.orbit.version>3.6.1.wso2v1</gogoproto.orbit.version>
+        <protobuf.gogoproto.version>3.6.1.wso2v1</protobuf.gogoproto.version>
         <spotify.docker.plugin.version>1.4.10</spotify.docker.plugin.version>
-
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <docker.repo.name>celleryio</docker.repo.name>
+        <docker.repo.name>sinthuja</docker.repo.name>
         <docker.image.tag>latest</docker.image.tag>
     </properties>
 </project>
